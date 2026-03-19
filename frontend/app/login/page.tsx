@@ -20,7 +20,7 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch (err) {
+    } catch {
       setError('Unable to login. Please try again.');
     }
   };

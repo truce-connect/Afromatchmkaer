@@ -118,7 +118,7 @@ function LoveLettersSection() {
                     <p className="text-sm text-[#5C2A5F]/70">{story.location}</p>
                   </div>
                 </div>
-                <p className="flex-1 text-base text-[#5C2A5F]/80">"{story.quote}"</p>
+                <p className="flex-1 text-base text-[#5C2A5F]/80">&ldquo;{story.quote}&rdquo;</p>
                 <div className="flex gap-1 text-[#F4B3C5]" aria-label="5 star review">
                   {Array.from({ length: 5 }).map((_, index) => (
                     <span key={index}>★</span>
