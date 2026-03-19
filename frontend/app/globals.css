@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #2B2B2B;
+  background-color: #F7F4EF;
+}
+
+body {
+  @apply bg-[#F7F4EF] text-[#2B2B2B] font-body antialiased;
+  background-image: radial-gradient(circle at 1px 1px, rgba(201, 162, 39, 0.08) 1px, transparent 0);
+  background-size: 60px 60px;
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+}
+
+section {
+  @apply py-16;
+}
