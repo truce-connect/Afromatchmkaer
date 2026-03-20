@@ -116,6 +116,10 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', message: 'AfroMatchmaker API is running' });
+});
+
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
