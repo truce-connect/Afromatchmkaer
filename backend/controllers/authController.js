@@ -11,7 +11,7 @@ const REFRESH_TTL = process.env.JWT_REFRESH_EXPIRES || '7d';
 const cookieOptions = {
   httpOnly: true,
   secure: isProduction,
-  sameSite: 'strict',
+  sameSite: isProduction ? 'none' : 'strict',
   path: '/'
 };
 
