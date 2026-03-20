@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { io, type Socket } from 'socket.io-client';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
@@ -77,7 +77,7 @@ const PaperclipIcon = () => (
   </svg>
 );
 
-export default function MessagesPage() {
+function MessagesPageInner() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const [matches, setMatches] = useState<MatchRecord[]>([]);
@@ -413,5 +413,13 @@ export default function MessagesPage() {
         </div>
       </section>
     </ProtectedRoute>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense>
+      <MessagesPageInner />
+    </Suspense>
   );
 }
