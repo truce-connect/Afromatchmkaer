@@ -105,7 +105,7 @@ const csrfProtection = csurf({
   cookie: {
     key: 'csrfSecret',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: isProduction ? 'none' : 'strict',
     secure: isProduction
   }
 });
