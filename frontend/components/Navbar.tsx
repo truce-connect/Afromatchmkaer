@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationBadge } from '@/hooks/useNotificationBadge';
+import { resolveImageUrl } from '@/lib/utils';
 
 const marketingNavItems = [
   { href: '/', label: 'Home' },
@@ -83,7 +84,7 @@ export function Navbar() {
     );
   };
 
-  const avatarSrc = user?.profileImage || user?.gallery?.[0] || FALLBACK_AVATAR;
+  const avatarSrc = resolveImageUrl(user?.profileImage) || resolveImageUrl(user?.gallery?.[0]) || FALLBACK_AVATAR;
 
   return (
     <motion.header

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { UserProfile } from '@/lib/api';
+import { resolveImageUrl } from '@/lib/utils';
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80';
 
@@ -28,7 +29,7 @@ export function DiscoverProfileCard({
   secondaryLabel = 'Pass'
 }: DiscoverProfileCardProps) {
   const profileId = profile._id || profile.id || '';
-  const displayImage = profile.profileImage || profile.gallery?.[0] || FALLBACK_IMAGE;
+  const displayImage = resolveImageUrl(profile.profileImage) || resolveImageUrl(profile.gallery?.[0]) || FALLBACK_IMAGE;
   const interestChips = (profile.interests || []).slice(0, 4);
   const bioPreview = profile.bio ? `${profile.bio.slice(0, 120)}${profile.bio.length > 120 ? '…' : ''}` : 'No bio yet, but ready to explore new connections.';
 

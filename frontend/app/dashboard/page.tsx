@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { fetchMatches, type MatchRecord, type UserProfile } from '@/lib/api';
+import { resolveImageUrl } from '@/lib/utils';
 
 const communityEvents = [
   {
@@ -76,7 +77,7 @@ interface MatchCardProps {
 
 const MatchCard = ({ match, score, liked, onToggleLike }: MatchCardProps) => {
   const profile = match.profile;
-  const avatar = profile?.profileImage || FALLBACK_CARD;
+  const avatar = resolveImageUrl(profile?.profileImage) || FALLBACK_CARD;
   return (
     <div className="group rounded-[28px] border border-[#F5D0E6] bg-white/95 p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#C65D3B]/40 hover:shadow-xl">
       <div className="relative overflow-hidden rounded-3xl">
@@ -209,8 +210,8 @@ export default function DashboardPage() {
   };
   const galleryImages = useMemo(() => (user?.gallery && user.gallery.length ? user.gallery : []), [user?.gallery]);
   const currentAvatar = useMemo(() => {
-    if (user?.profileImage) return user.profileImage;
-    if (user?.gallery && user.gallery.length) return user.gallery[0];
+    if (user?.profileImage) return resolveImageUrl(user.profileImage) ?? FALLBACK_AVATAR;
+    if (user?.gallery && user.gallery.length) return resolveImageUrl(user.gallery[0]) ?? FALLBACK_AVATAR;
     return FALLBACK_AVATAR;
   }, [user?.profileImage, user?.gallery]);
   const profileCompletion = useMemo(() => computeProfileCompletion(user), [user]);
