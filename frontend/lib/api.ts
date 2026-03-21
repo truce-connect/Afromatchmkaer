@@ -199,6 +199,7 @@ export interface RegisterPayload {
   interests: string[];
   profileImage?: string;
   gallery?: string[];
+  phone?: string;
 }
 
 export interface RegisterResponse extends AuthResponse {

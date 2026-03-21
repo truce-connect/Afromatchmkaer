@@ -100,7 +100,7 @@ export default function JoinPage() {
   const handleGenderPreference = async (preference: 'male' | 'female' | 'both') => {
     try {
       await updateUserProfile({ preferredGender: preference });
-    } catch (_) {
+    } catch {
       // non-critical, proceed regardless
     }
     setShowGenderModal(false);
