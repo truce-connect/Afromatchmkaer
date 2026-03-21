@@ -31,21 +31,21 @@ const loveLetters = [
     location: 'Accra, Ghana',
     quote:
       'Our connection was instant and profound. AfroMatchmaker helped us find not just love, but our soulmate. Every moment together feels like a dream.',
-    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80'
+    image: '/coupl1.jpg'
   },
   {
     couple: 'Zara & Emeka',
     location: 'Lagos, Nigeria',
     quote:
       'We bonded over our shared heritage and romantic dreams. Now we are planning our wedding and could not be happier. This platform changed our lives.',
-    image: 'https://images.unsplash.com/photo-1583394808795-ba12c7c24a70?auto=format&fit=crop&w=900&q=80'
+    image: '/coupl2.jpg'
   },
   {
     couple: 'Aisha & Kwame',
     location: 'London, UK',
     quote:
       'Finding someone who understands both my culture and my heart was a dream come true. The romantic journey we have shared has been magical.',
-    image: 'https://images.unsplash.com/photo-1605539761597-5ce11fb9d6f5?auto=format&fit=crop&w=900&q=80'
+    image: '/coupl3.jpg'
   }
 ];
 
@@ -102,11 +102,11 @@ function LoveLettersSection() {
               key={story.couple}
               className="flex h-full flex-col overflow-hidden rounded-[30px] bg-[#FFF6FA] shadow-[0_30px_90px_rgba(205,140,170,0.15)] ring-1 ring-[#F7D7E7]"
             >
-              <div className="relative h-48 w-full">
+              <div className="relative h-72 w-full">
                 <img
                   src={story.image}
                   alt={`${story.couple} celebrating love`}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
                   loading="lazy"
                 />
               </div>
