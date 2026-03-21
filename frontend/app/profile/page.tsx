@@ -311,10 +311,10 @@ export default function ProfilePage() {
                     </button>
                   </div>
                 ))}
-                {form.gallery.length < 6 && (
+                {form.gallery.length < 9 && (
                   <label className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[#C65D3B]/40 text-sm text-[#C65D3B]">
-                    {uploadingGallery ? 'Uploading…' : '+ Add photo'}
-                    <input type="file" accept="image/*" multiple className="hidden" disabled={uploadingGallery} onChange={handleGalleryUpload} />
+                    {uploadingGallery ? 'Uploading…' : '+ Add photo / video'}
+                    <input type="file" accept="image/*,video/*" multiple className="hidden" disabled={uploadingGallery} onChange={handleGalleryUpload} />
                   </label>
                 )}
               </div>
@@ -340,12 +340,19 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {form.gallery.map((url) => (
-                <div key={url} className="overflow-hidden rounded-2xl border border-[#C65D3B]/20">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="Gallery item" className="h-48 w-full object-cover" />
-                </div>
-              ))}
+              {form.gallery.map((url) => {
+                const isVideo = /\.(mp4|webm|ogg|m4v|mov)(\?|$)/i.test(url);
+                return (
+                  <div key={url} className="overflow-hidden rounded-2xl border border-[#C65D3B]/20">
+                    {isVideo ? (
+                      <video src={url} controls className="h-48 w-full object-cover" />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={url} alt="Gallery item" className="h-48 w-full object-cover" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
