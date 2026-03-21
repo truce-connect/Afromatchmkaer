@@ -27,25 +27,25 @@ const experienceHighlights: { title: string; description: string; icon: IconType
 
 const loveLetters = [
   {
-    couple: 'Emma & James',
-    location: 'Paris, France',
+    couple: 'Amara & Kofi',
+    location: 'Accra, Ghana',
     quote:
       'Our connection was instant and profound. AfroMatchmaker helped us find not just love, but our soulmate. Every moment together feels like a dream.',
-    image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80'
   },
   {
-    couple: 'Sofia & Marcus',
-    location: 'New York, USA',
+    couple: 'Zara & Emeka',
+    location: 'Lagos, Nigeria',
     quote:
       'We bonded over our shared heritage and romantic dreams. Now we are planning our wedding and could not be happier. This platform changed our lives.',
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=900&q=80'
   },
   {
-    couple: 'Aisha & David',
+    couple: 'Aisha & Kwame',
     location: 'London, UK',
     quote:
       'Finding someone who understands both my culture and my heart was a dream come true. The romantic journey we have shared has been magical.',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1616091216791-a5360b5b3b2e?auto=format&fit=crop&w=900&q=80'
   }
 ];
 

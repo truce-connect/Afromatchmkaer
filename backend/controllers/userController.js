@@ -163,7 +163,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const editableFields = ['name', 'bio', 'country', 'address', 'age', 'gender', 'diaspora', 'interests', 'gallery', 'profileImage', 'coverPhoto', 'onboardingComplete'];
+  const editableFields = ['name', 'bio', 'country', 'address', 'phone', 'age', 'gender', 'diaspora', 'interests', 'gallery', 'profileImage', 'coverPhoto', 'onboardingComplete'];
   const updates = {};
 
   editableFields.forEach((field) => {

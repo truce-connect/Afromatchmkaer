@@ -11,9 +11,9 @@ const heroStats = [
 ];
 
 const heroImages = [
-  '/media/landing-hero.jpg',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80'
+  'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1616091216791-a5360b5b3b2e?auto=format&fit=crop&w=1200&q=80'
 ];
 
 export function HeroSection() {

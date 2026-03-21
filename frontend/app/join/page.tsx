@@ -15,6 +15,7 @@ export default function JoinPage() {
     name: '',
     username: '',
     email: '',
+    phone: '',
     password: '',
     address: '',
     country: '',
@@ -73,6 +74,7 @@ export default function JoinPage() {
         name: form.name,
         username: form.username,
         email: form.email,
+        phone: form.phone || undefined,
         password: form.password,
         address: form.address,
         country: form.country,
@@ -149,6 +151,10 @@ export default function JoinPage() {
           <label className="text-sm text-[#2B2B2B]">
             Country
             <input value={form.country} onChange={(event) => setForm({ ...form, country: event.target.value })} required className="mt-1 w-full rounded-2xl border border-[#C65D3B]/20 px-4 py-3" placeholder="Nigeria" />
+          </label>
+          <label className="text-sm text-[#2B2B2B]">
+            Phone number (optional)
+            <input type="tel" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} className="mt-1 w-full rounded-2xl border border-[#C65D3B]/20 px-4 py-3" placeholder="+234 801 234 5678" />
           </label>
           <label className="text-sm text-[#2B2B2B] md:col-span-2">
             Password
