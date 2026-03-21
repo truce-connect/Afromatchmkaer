@@ -2,10 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { AxiosError } from 'axios';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { registerRequest, uploadProfileImage } from '@/lib/api';
+import { registerRequest, uploadProfileImage, updateUserProfile } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function JoinPage() {
@@ -17,7 +17,7 @@ export default function JoinPage() {
     email: '',
     phone: '',
     password: '',
-    address: '',
+    city: '',
     country: '',
     hobbies: ''
   });
@@ -26,6 +26,7 @@ export default function JoinPage() {
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [showGenderModal, setShowGenderModal] = useState(false);
 
   const parsedHobbies = useMemo(
     () =>
@@ -76,7 +77,7 @@ export default function JoinPage() {
         email: form.email,
         phone: form.phone || undefined,
         password: form.password,
-        address: form.address,
+        address: form.city || undefined,
         country: form.country,
         interests: parsedHobbies,
         profileImage: uploadedPhotoUrl,
@@ -85,7 +86,7 @@ export default function JoinPage() {
       setMessage(response.message || 'Account created successfully.');
       if (response.accessToken && response.user) {
         await setSession(response);
-        router.push('/dashboard');
+        setShowGenderModal(true);
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
@@ -94,6 +95,16 @@ export default function JoinPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGenderPreference = async (preference: 'male' | 'female' | 'both') => {
+    try {
+      await updateUserProfile({ preferredGender: preference });
+    } catch (_) {
+      // non-critical, proceed regardless
+    }
+    setShowGenderModal(false);
+    router.push('/dashboard');
   };
 
   const canSubmitForm =
@@ -108,6 +119,51 @@ export default function JoinPage() {
 
   return (
     <section className="bg-[#F7F4EF]">
+      {/* Gender preference modal — shown immediately after successful signup */}
+      <AnimatePresence>
+        {showGenderModal && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl text-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <h2 className="font-display text-2xl text-[#2B2B2B]">Who are you looking for?</h2>
+              <p className="mt-2 text-sm text-[#2B2B2B]/70">This helps us personalise who shows up in your matches and discover feed.</p>
+              <div className="mt-6 flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleGenderPreference('female')}
+                  className="rounded-full border-2 border-[#C65D3B]/30 py-3 text-sm font-semibold text-[#2B2B2B] hover:border-[#C65D3B] hover:bg-[#C65D3B]/5 transition"
+                >
+                  Women
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleGenderPreference('male')}
+                  className="rounded-full border-2 border-[#C65D3B]/30 py-3 text-sm font-semibold text-[#2B2B2B] hover:border-[#C65D3B] hover:bg-[#C65D3B]/5 transition"
+                >
+                  Men
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleGenderPreference('both')}
+                  className="rounded-full bg-[#C65D3B] py-3 text-sm font-semibold text-white hover:bg-[#b05234] transition"
+                >
+                  Both — show me everyone
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="mx-auto flex max-w-2xl flex-col gap-6 rounded-3xl bg-white p-8 shadow-card">
         <motion.form onSubmit={handleRegister} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
@@ -175,9 +231,9 @@ export default function JoinPage() {
               Use 8+ characters with at least one uppercase letter, one number, and one special symbol.
             </span>
           </label>
-          <label className="text-sm text-[#2B2B2B] md:col-span-2">
-            Address / City (optional)
-            <input value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} className="mt-1 w-full rounded-2xl border border-[#C65D3B]/20 px-4 py-3" placeholder="Accra, East Legon" />
+          <label className="text-sm text-[#2B2B2B]">
+            City (optional)
+            <input value={form.city} onChange={(event) => setForm({ ...form, city: event.target.value })} className="mt-1 w-full rounded-2xl border border-[#C65D3B]/20 px-4 py-3" placeholder="Accra, East Legon" />
           </label>
           <label className="text-sm text-[#2B2B2B] md:col-span-2">
             Hobbies & interests (comma separated)

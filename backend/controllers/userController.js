@@ -52,6 +52,19 @@ const discoverUsers = asyncHandler(async (req, res) => {
 
   const filters = { _id: { $ne: req.user?.id } };
 
+  // Apply gender preference filter from the current user's profile
+  if (req.user?.id) {
+    const me = await User.findById(req.user.id).select('preferredGender').lean();
+    if (me?.preferredGender && me.preferredGender !== 'both') {
+      filters.gender = me.preferredGender;
+    }
+  }
+
+  // Allow explicit gender override from query param
+  if (req.query.gender && ['male', 'female'].includes(req.query.gender)) {
+    filters.gender = req.query.gender;
+  }
+
   const ageMin = Number(req.query.ageMin);
   const ageMax = Number(req.query.ageMax);
   if (!Number.isNaN(ageMin) || !Number.isNaN(ageMax)) {
@@ -96,13 +109,19 @@ const discoverUsers = asyncHandler(async (req, res) => {
 });
 
 const getUserMatches = asyncHandler(async (req, res) => {
-  const currentUser = await User.findById(req.user.id).select('interests country age');
+  const currentUser = await User.findById(req.user.id).select('interests country age preferredGender');
   if (!currentUser) {
     return res.status(404).json({ message: 'User not found.' });
   }
 
   const interestPool = (currentUser.interests || []).filter(Boolean);
   const baseQuery = { _id: { $ne: req.user.id } };
+
+  // Filter by the user's gender preference
+  if (currentUser.preferredGender && currentUser.preferredGender !== 'both') {
+    baseQuery.gender = currentUser.preferredGender;
+  }
+
   if (interestPool.length) {
     baseQuery.interests = { $in: interestPool };
   }
@@ -163,7 +182,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const editableFields = ['name', 'bio', 'country', 'address', 'phone', 'age', 'gender', 'diaspora', 'interests', 'gallery', 'profileImage', 'coverPhoto', 'onboardingComplete'];
+  const editableFields = ['name', 'bio', 'country', 'address', 'phone', 'preferredGender', 'age', 'gender', 'diaspora', 'interests', 'gallery', 'profileImage', 'coverPhoto', 'onboardingComplete'];
   const updates = {};
 
   editableFields.forEach((field) => {

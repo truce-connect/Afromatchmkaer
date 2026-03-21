@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    preferredGender: {
+      type: String,
+      enum: ['male', 'female', 'both'],
+      default: 'both'
+    },
     diaspora: {
       type: Boolean,
       default: false

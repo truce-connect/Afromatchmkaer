@@ -152,6 +152,7 @@ export interface UserProfile extends UserSummary {
   communities?: string[];
   following?: string[];
   onboardingComplete?: boolean;
+  preferredGender?: 'male' | 'female' | 'both';
   notificationPreferences?: NotificationPreferences;
   privacySettings?: PrivacySettings;
 }

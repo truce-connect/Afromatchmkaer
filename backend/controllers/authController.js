@@ -55,7 +55,7 @@ const clearAuthCookies = (res) => {
 };
 
 const register = asyncHandler(async (req, res) => {
-  const { name, username, email, password, age, gender, country, address, phone, diaspora, interests, profileImage, gallery } = req.body;
+  const { name, username, email, password, age, gender, country, address, phone, preferredGender, diaspora, interests, profileImage, gallery } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Name, email, and password are required.' });
@@ -92,6 +92,7 @@ const register = asyncHandler(async (req, res) => {
     country,
     address,
     phone,
+    preferredGender: preferredGender || 'both',
     diaspora,
     interests: normalizedInterests,
     profileImage,
