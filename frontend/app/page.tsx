@@ -31,21 +31,21 @@ const loveLetters = [
     location: 'Accra, Ghana',
     quote:
       'Our connection was instant and profound. AfroMatchmaker helped us find not just love, but our soulmate. Every moment together feels like a dream.',
-    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=900&q=80'
   },
   {
     couple: 'Zara & Emeka',
     location: 'Lagos, Nigeria',
     quote:
       'We bonded over our shared heritage and romantic dreams. Now we are planning our wedding and could not be happier. This platform changed our lives.',
-    image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1583394808795-ba12c7c24a70?auto=format&fit=crop&w=900&q=80'
   },
   {
     couple: 'Aisha & Kwame',
     location: 'London, UK',
     quote:
       'Finding someone who understands both my culture and my heart was a dream come true. The romantic journey we have shared has been magical.',
-    image: 'https://images.unsplash.com/photo-1616091216791-a5360b5b3b2e?auto=format&fit=crop&w=900&q=80'
+    image: 'https://images.unsplash.com/photo-1605539761597-5ce11fb9d6f5?auto=format&fit=crop&w=900&q=80'
   }
 ];
 
