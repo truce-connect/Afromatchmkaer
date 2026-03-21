@@ -184,11 +184,10 @@ function MessagesPageInner() {
       });
 
       setMessages((prev) => (prev.some((msg) => msg._id === saved._id) ? prev : [...prev, saved]));
+      // Broadcast the already-saved message to the other participant via socket (no DB write on server)
       socketRef.current?.emit('sendMessage', {
         conversationId: activeMatch.conversationId,
-        senderId: currentUserId,
-        recipientId,
-        body: input.trim()
+        message: saved
       });
       setInput('');
     } catch (error) {

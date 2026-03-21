@@ -167,32 +167,12 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('sendMessage', async ({ conversationId, senderId, recipientId, body }) => {
-    if (!conversationId || !senderId || !recipientId || !body) {
-      return;
-    }
-
-    try {
-      const match = await Match.findOne({ conversationId, participants: senderId });
-      if (!match) {
-        return socket.emit('messageError', { message: 'Conversation not found.' });
-      }
-
-      const message = await Message.create({
-        conversationId,
-        sender: senderId,
-        recipient: recipientId,
-        body
-      });
-
-      match.lastMessageAt = message.createdAt;
-      await match.save();
-
-      io.to(conversationId).emit('messageCreated', message);
-    } catch (error) {
-      console.error('Socket sendMessage error:', error);
-      socket.emit('messageError', { message: 'Unable to send message.' });
-    }
+  // sendMessage via socket is broadcast-only.
+  // The REST POST /api/messages endpoint handles DB persistence and auth.
+  // This just notifies other participants in the room in real-time.
+  socket.on('sendMessage', ({ conversationId, message }) => {
+    if (!conversationId || !message) return;
+    socket.to(conversationId).emit('messageCreated', message);
   });
 
   socket.on('disconnect', () => {

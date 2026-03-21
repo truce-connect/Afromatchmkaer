@@ -77,4 +77,19 @@ const respondToFriendRequest = asyncHandler(async (req, res) => {
   res.json({ message: `Friend request ${action}ed.` });
 });
 
-module.exports = { sendFriendRequest, respondToFriendRequest };
+const listFriends = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id)
+    .populate('friends', 'name profileImage country bio')
+    .lean();
+  res.json({ friends: user?.friends || [] });
+});
+
+const listPendingRequests = asyncHandler(async (req, res) => {
+  const requests = await FriendRequest.find({ receiver: req.user.id, status: 'pending' })
+    .populate('sender', 'name profileImage country')
+    .sort({ createdAt: -1 })
+    .lean();
+  res.json({ requests });
+});
+
+module.exports = { sendFriendRequest, respondToFriendRequest, listFriends, listPendingRequests };

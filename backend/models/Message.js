@@ -12,15 +12,14 @@ const messageSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    receiver: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: 'User'
     },
-    text: {
+    body: {
       type: String,
       trim: true,
-      required: true
+      default: ''
     },
     readAt: Date,
     typingEvent: {
