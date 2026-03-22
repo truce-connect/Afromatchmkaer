@@ -18,13 +18,14 @@ const {
   changePassword
 } = require('../controllers/authController');
 const rateLimiter = require('../middleware/rateLimiter');
+const { authRateLimiter } = require('../middleware/rateLimiter');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.post(
   '/register',
-  rateLimiter,
+  authRateLimiter,
   [
     body('name').notEmpty().withMessage('Name is required.'),
     body('username').notEmpty().withMessage('Username is required.'),
@@ -38,7 +39,7 @@ router.post(
     body('interests').isArray({ min: 1 }).withMessage('Add at least one hobby/interest.'),
     body('interests.*').isString().withMessage('Interests must be strings.'),
     body('profileImage').optional().isString(),
-    body('gallery').optional().isArray({ max: 6 }).withMessage('Up to 6 gallery images allowed.'),
+    body('gallery').optional().isArray({ max: 9 }).withMessage('Up to 9 gallery items allowed.'),
     body('gallery.*').isString().withMessage('Gallery entries must be strings.')
   ],
   register
@@ -46,7 +47,7 @@ router.post(
 
 router.post(
   '/login',
-  rateLimiter,
+  authRateLimiter,
   [body('email').isEmail(), body('password').notEmpty(), body('twoFactorCode').optional().isString()],
   login
 );

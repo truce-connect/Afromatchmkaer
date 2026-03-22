@@ -142,6 +142,9 @@ const refreshToken = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: 'Refresh token missing.' });
   }
 
+  // Clear the incoming refresh token cookie immediately (rotation)
+  res.clearCookie('afr_refresh', cookieOptions);
+
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     if (payload.type !== 'refresh') {
@@ -153,6 +156,7 @@ const refreshToken = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: 'User not found.' });
     }
 
+    // Issue brand new tokens (old refresh token is already cleared above)
     const tokens = issueTokens(user._id);
     attachCookie(res, 'afr_refresh', REFRESH_TTL, tokens.refreshToken);
     attachCookie(res, 'afr_access', ACCESS_TTL, tokens.accessToken);
