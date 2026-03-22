@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from 'react';
+import { AxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -20,8 +21,9 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch {
-      setError('Unable to login. Please try again.');
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      setError(axiosError.response?.data?.message || 'Unable to login. Please check your email and password.');
     }
   };
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, query } = require('express-validator');
+const { body, query, validationResult } = require('express-validator');
 const passport = require('../config/passport');
 const {
   register,
@@ -15,13 +15,23 @@ const {
   verifyTwoFactorSetup,
   disableTwoFactor,
   oauthCallback,
-  changePassword
+  changePassword,
+  me
 } = require('../controllers/authController');
 const rateLimiter = require('../middleware/rateLimiter');
 const { authRateLimiter } = require('../middleware/rateLimiter');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
+
+// Checks express-validator result and short-circuits with 422 on errors
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: errors.array()[0].msg, errors: errors.array() });
+  }
+  return next();
+};
 
 router.post(
   '/register',
@@ -42,13 +52,15 @@ router.post(
     body('gallery').optional().isArray({ max: 9 }).withMessage('Up to 9 gallery items allowed.'),
     body('gallery.*').isString().withMessage('Gallery entries must be strings.')
   ],
+  validate,
   register
 );
 
 router.post(
   '/login',
   authRateLimiter,
-  [body('email').isEmail(), body('password').notEmpty(), body('twoFactorCode').optional().isString()],
+  [body('email').isEmail().withMessage('Valid email is required.'), body('password').notEmpty().withMessage('Password is required.'), body('twoFactorCode').optional().isString()],
+  validate,
   login
 );
 
@@ -56,6 +68,7 @@ router.post(
   '/verify-otp',
   rateLimiter,
   [body('email').isEmail(), body('code').isLength({ min: 6, max: 6 })],
+  validate,
   verifyOtp
 );
 
@@ -63,6 +76,7 @@ router.post(
   '/resend-otp',
   rateLimiter,
   [body('email').isEmail().withMessage('Valid email is required.')],
+  validate,
   resendOtp
 );
 
@@ -70,10 +84,13 @@ router.post('/refresh-token', refreshToken);
 
 router.post('/logout', logout);
 
+router.get('/me', authMiddleware, me);
+
 router.post(
   '/forgot-password',
   rateLimiter,
   [body('email').isEmail().withMessage('Valid email is required.')],
+  validate,
   forgotPassword
 );
 
@@ -84,6 +101,7 @@ router.post(
     body('token').notEmpty().withMessage('Reset token is required.'),
     body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
   ],
+  validate,
   resetPassword
 );
 
@@ -94,10 +112,11 @@ router.put(
     body('currentPassword').isLength({ min: 8 }).withMessage('Current password is required.'),
     body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters.')
   ],
+  validate,
   changePassword
 );
 
-router.get('/check-username', [query('username').notEmpty().withMessage('username is required')], checkUsername);
+router.get('/check-username', [query('username').notEmpty().withMessage('username is required')], validate, checkUsername);
 
 router.post('/2fa/setup', authMiddleware, initiateTwoFactorSetup);
 
