@@ -1,6 +1,8 @@
 const asyncHandler = require('../utils/asyncHandler');
 const User = require('../models/User');
+const Match = require('../models/Match');
 const Report = require('../models/Report');
+const { createNotification } = require('../utils/notificationService');
 
 const sanitizeUser = (userDoc) => {
   if (!userDoc) return null;

@@ -1,6 +1,8 @@
+const { v4: uuidv4 } = require('uuid');
 const asyncHandler = require('../utils/asyncHandler');
 const FriendRequest = require('../models/FriendRequest');
 const User = require('../models/User');
+const Match = require('../models/Match');
 const { createNotification } = require('../utils/notificationService');
 
 const sendFriendRequest = asyncHandler(async (req, res) => {
@@ -64,6 +66,16 @@ const respondToFriendRequest = asyncHandler(async (req, res) => {
       User.findByIdAndUpdate(friendRequest.receiver, { $addToSet: { friends: friendRequest.sender } }),
       User.findByIdAndUpdate(friendRequest.sender, { $addToSet: { friends: friendRequest.receiver } })
     ]);
+
+    // Create a Match/conversation record so both users can message each other.
+    // Use a stable conversationId derived from both user IDs (sorted) to avoid duplicates.
+    const ids = [friendRequest.sender.toString(), friendRequest.receiver.toString()].sort();
+    const stableConversationId = `conv_${ids[0]}_${ids[1]}`;
+    await Match.findOneAndUpdate(
+      { conversationId: stableConversationId },
+      { conversationId: stableConversationId, participants: ids },
+      { upsert: true, setDefaultsOnInsert: true }
+    );
 
     await createNotification({
       user: friendRequest.sender,
