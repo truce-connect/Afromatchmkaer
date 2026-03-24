@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require('uuid');
 const asyncHandler = require('../utils/asyncHandler');
 const FriendRequest = require('../models/FriendRequest');
 const User = require('../models/User');
