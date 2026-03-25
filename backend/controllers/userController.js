@@ -266,6 +266,40 @@ const reportUser = asyncHandler(async (req, res) => {
   res.status(201).json({ message: 'Report submitted successfully.', reportId: report._id });
 });
 
+const searchUsers = asyncHandler(async (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q) return res.json({ users: [] });
+  const users = await User.find({
+    $or: [
+      { email: { $regex: q, $options: 'i' } },
+      { name: { $regex: q, $options: 'i' } },
+      { username: { $regex: q, $options: 'i' } }
+    ]
+  })
+    .select('name username email role profileImage')
+    .limit(10)
+    .lean();
+  res.json({ users });
+});
+
+const setUserRole = asyncHandler(async (req, res) => {
+  const { role } = req.body;
+  if (!['user', 'admin'].includes(role)) {
+    return res.status(400).json({ message: 'Role must be "user" or "admin".' });
+  }
+  // Prevent removing own admin role
+  if (req.params.id === req.user.id && role !== 'admin') {
+    return res.status(400).json({ message: 'You cannot remove your own admin role.' });
+  }
+  const updated = await User.findByIdAndUpdate(
+    req.params.id,
+    { role },
+    { new: true, select: 'name username email role' }
+  );
+  if (!updated) return res.status(404).json({ message: 'User not found.' });
+  res.json({ user: updated });
+});
+
 module.exports = {
   discoverUsers,
   getUserById,
@@ -273,5 +307,7 @@ module.exports = {
   updateProfile,
   reportUser,
   getUserMatches,
-  deleteAccount
+  deleteAccount,
+  searchUsers,
+  setUserRole
 };

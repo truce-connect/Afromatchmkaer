@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { fetchAllAds, createAd, updateAd, deleteAd, uploadPublicFiles, type Ad } from '@/lib/api';
+import { fetchAllAds, createAd, updateAd, deleteAd, uploadPublicFiles, searchAdminUsers, setUserRole, type Ad, type AdminUserResult } from '@/lib/api';
 
 export default function AdminAdsPage() {
   const { user, loading } = useAuth();
@@ -17,6 +17,12 @@ export default function AdminAdsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Admin management
+  const [userQuery, setUserQuery] = useState('');
+  const [userResults, setUserResults] = useState<AdminUserResult[]>([]);
+  const [userSearching, setUserSearching] = useState(false);
+  const [userMsg, setUserMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) {
@@ -74,6 +80,33 @@ export default function AdminAdsPage() {
       setAds((prev) => prev.filter((a) => a._id !== id));
     } catch {
       setMessage('Failed to delete ad.');
+    }
+  };
+
+  const handleUserSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userQuery.trim()) return;
+    setUserSearching(true);
+    setUserMsg(null);
+    try {
+      const results = await searchAdminUsers(userQuery.trim());
+      setUserResults(results);
+      if (results.length === 0) setUserMsg('No users found.');
+    } catch {
+      setUserMsg('Search failed.');
+    } finally {
+      setUserSearching(false);
+    }
+  };
+
+  const handleToggleRole = async (u: AdminUserResult) => {
+    const newRole = u.role === 'admin' ? 'user' : 'admin';
+    try {
+      const updated = await setUserRole(u._id, newRole);
+      setUserResults((prev) => prev.map((x) => (x._id === updated._id ? updated : x)));
+      setUserMsg(`${updated.name} is now ${updated.role}.`);
+    } catch {
+      setUserMsg('Failed to update role.');
     }
   };
 
@@ -165,6 +198,55 @@ export default function AdminAdsPage() {
             ))}
           </div>
         )}
+        {/* Manage Admins */}
+        <div className="mt-12 rounded-2xl border border-[#F5D0E6] bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-[#2B2B2B]">Manage Admins</h2>
+          <form onSubmit={handleUserSearch} className="mb-4 flex gap-2">
+            <input
+              type="text"
+              value={userQuery}
+              onChange={(e) => setUserQuery(e.target.value)}
+              placeholder="Search by name, email or username…"
+              className="flex-1 rounded-xl border border-[#F5D0E6] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C65D3B]"
+            />
+            <button
+              type="submit"
+              disabled={userSearching}
+              className="rounded-xl bg-[#C65D3B] px-5 py-2 text-sm font-semibold text-white hover:bg-[#a84d30] disabled:opacity-50"
+            >
+              {userSearching ? 'Searching…' : 'Search'}
+            </button>
+          </form>
+          {userMsg && <p className="mb-3 text-sm text-[#C65D3B]">{userMsg}</p>}
+          {userResults.length > 0 && (
+            <div className="space-y-3">
+              {userResults.map((u) => (
+                <div key={u._id} className="flex items-center justify-between rounded-xl border border-[#F5D0E6] px-4 py-3">
+                  <div>
+                    <p className="font-semibold text-[#2B2B2B]">{u.name}</p>
+                    <p className="text-xs text-[#8E4B5A]">{u.email}</p>
+                    <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                      u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      {u.role}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleToggleRole(u)}
+                    className={`rounded-xl px-4 py-1.5 text-xs font-semibold ${
+                      u.role === 'admin'
+                        ? 'border border-red-300 text-red-500 hover:bg-red-50'
+                        : 'bg-[#C65D3B] text-white hover:bg-[#a84d30]'
+                    }`}
+                  >
+                    {u.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

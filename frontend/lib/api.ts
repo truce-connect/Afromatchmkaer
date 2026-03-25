@@ -317,6 +317,25 @@ export const updateAd = async (id: string, payload: Partial<Ad>): Promise<Ad> =>
   return data.ad;
 };
 
+export interface AdminUserResult {
+  _id: string;
+  name: string;
+  username?: string;
+  email: string;
+  role: 'user' | 'admin';
+  profileImage?: string;
+}
+
+export const searchAdminUsers = async (q: string): Promise<AdminUserResult[]> => {
+  const { data } = await api.get<{ users: AdminUserResult[] }>(`/users/admin/search?q=${encodeURIComponent(q)}`);
+  return data.users;
+};
+
+export const setUserRole = async (userId: string, role: 'user' | 'admin'): Promise<AdminUserResult> => {
+  const { data } = await api.patch<{ user: AdminUserResult }>(`/users/${userId}/role`, { role });
+  return data.user;
+};
+
 export const deleteAd = async (id: string): Promise<void> => {
   await api.delete(`/ads/${id}`);
 };
