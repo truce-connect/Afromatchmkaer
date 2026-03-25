@@ -138,6 +138,7 @@ export interface UserProfile extends UserSummary {
   username?: string;
   age?: number;
   gender?: string;
+  role?: 'user' | 'admin';
   country?: string;
   address?: string;
   diaspora?: boolean;
@@ -284,6 +285,40 @@ export const updateUserProfile = async (updates: Partial<UserProfile>): Promise<
 export const deleteAccountRequest = async (): Promise<{ message: string }> => {
   const { data } = await api.delete<{ message: string }>('/users/delete');
   return data;
+};
+
+// ── Ads ─────────────────────────────────────────────────────────────────────
+export interface Ad {
+  _id: string;
+  title: string;
+  imageUrl: string;
+  linkUrl?: string | null;
+  active: boolean;
+  createdAt: string;
+}
+
+export const fetchActiveAds = async (): Promise<Ad[]> => {
+  const { data } = await api.get<{ ads: Ad[] }>('/ads');
+  return data.ads;
+};
+
+export const fetchAllAds = async (): Promise<Ad[]> => {
+  const { data } = await api.get<{ ads: Ad[] }>('/ads/all');
+  return data.ads;
+};
+
+export const createAd = async (payload: { title: string; imageUrl: string; linkUrl?: string }): Promise<Ad> => {
+  const { data } = await api.post<{ ad: Ad }>('/ads', payload);
+  return data.ad;
+};
+
+export const updateAd = async (id: string, payload: Partial<Ad>): Promise<Ad> => {
+  const { data } = await api.patch<{ ad: Ad }>(`/ads/${id}`, payload);
+  return data.ad;
+};
+
+export const deleteAd = async (id: string): Promise<void> => {
+  await api.delete(`/ads/${id}`);
 };
 
 export const fetchUserProfileById = async (userId: string): Promise<UserProfile> => {

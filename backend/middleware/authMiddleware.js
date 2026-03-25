@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../utils/asyncHandler');
+const User = require('../models/User');
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
   let token = null;
@@ -18,7 +19,8 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.id };
+    const user = await User.findById(decoded.id).select('role').lean();
+    req.user = { id: decoded.id, role: user?.role || 'user' };
     return next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid or expired token.' });

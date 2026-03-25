@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { AuthProvider } from '@/context/AuthContext';
+import { AdPopup } from '@/components/AdPopup';
 
 const display = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
 const body = Work_Sans({ subsets: ['latin'], variable: '--font-body' });
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <AdPopup />
         </AuthProvider>
       </body>
     </html>

@@ -75,6 +75,11 @@ const userSchema = new mongoose.Schema(
     matches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Match' }],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     communities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Community' }],
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user'
+    },
     lastActiveAt: {
       type: Date,
       default: Date.now

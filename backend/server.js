@@ -26,6 +26,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const adRoutes = require('./routes/adRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const Message = require('./models/Message');
 const Match = require('./models/Match');
@@ -138,6 +139,7 @@ app.use('/api/uploads', uploadRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/ads', adRoutes);
 
 app.use((req, _res, next) => {
   const error = new Error(`Route ${req.originalUrl} not found`);
