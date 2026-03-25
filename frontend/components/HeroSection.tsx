@@ -11,9 +11,9 @@ const heroStats = [
 ];
 
 const heroImages = [
-  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1591035897819-f4bdf739f446?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1603539629216-6c9fa55fb0d1?auto=format&fit=crop&w=1200&q=80'
+  '/heropic1.jpg',
+  '/heropic2.jpg',
+  '/heropic3.jpg'
 ];
 
 export function HeroSection() {
