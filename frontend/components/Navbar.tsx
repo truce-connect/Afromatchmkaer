@@ -143,6 +143,11 @@ export function Navbar() {
                   <Link href="/settings" className="block rounded-xl px-3 py-2 hover:bg-[#FDF2F8]">
                     Settings
                   </Link>
+                  {user.role === 'admin' && (
+                    <Link href="/admin" className="block rounded-xl px-3 py-2 font-semibold text-[#C65D3B] hover:bg-[#FDF2F8]">
+                      Admin Ads
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={logout}
